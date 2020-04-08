@@ -301,6 +301,7 @@ webdkit_framework配置文件如下，可以在配置文件中增加业务自定
 ```
 [wdf]
 host="http://127.0.0.1:8080/"                     # wdf HTTP服务地址
+route = "pwdf"                                    # wdf url路由
 
 [dataway]
 url="http://10.100.64.106:19528/v1/write/metrics" # dataway数据接收地址
