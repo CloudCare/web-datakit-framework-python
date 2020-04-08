@@ -164,7 +164,7 @@ from webdkit_framework.decorator import Request, Response, Auth, UnAuth
 class DingTalk(WdkBase):
     def __init__(self):
         self.token = "123456"
-        self.corp_id = "ding756c3a3731cc4d7c"
+        self.corp_id = "ding756c3a3731cc4d7cd"
         self.app_key = "dingevjpdegyhmfvvzmx"
         self.app_secret = "-sF4tzkZ9dE17owMcYINj34_HJQf4eViUuzT9aZbRfbYjUpIU7ZzPAt9dQjK4OL6"
         self.access_token = self.get_access_token()
@@ -269,7 +269,7 @@ class DingTalk(WdkBase):
     @UnAuth(topic="bpms_task_change")
     def unauth(self):
         r = requests.get(url="https://oapi.dingtalk.com/call_back/delete_call_back?access_token={}".format(
-            "7b902c128f203d9aa8972fb996f2d34a"))
+            self.access_token))
         print(r.text)
         return True
 ```
@@ -280,11 +280,11 @@ class DingTalk(WdkBase):
 ```
 class DingDing(WdkBase):
 	@Request(topic="xxx", interval=x)
-    def get_data(self):
+	def get_data(self):
         # 获取数据逻辑实现
 
-    @Response(topic="xxx")
-    def pro_data(self, data):
+	@Response(topic="xxx")
+	def pro_data(self, data):
 		# 处理数据逻辑实现
         
 d = DingDing()          # 创建应用实例
