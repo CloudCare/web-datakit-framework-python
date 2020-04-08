@@ -91,13 +91,13 @@ webdkit_framework主要源文件及功能如下：
 - Auth(topic)，用于装饰第三方平台认证方法，
 	- 装饰器参数：`topic`：字符串类型，表示话题名；
 	- 方法参数：使用此装饰器的方法签名为`xxx(self, data, auth_stage)`，`data`：`byte`类型，表示待需要处理的验证数据，`auth_stage`：整数类型，表示框架维护的认证阶段，从数字0开始依次递增，业务根据需要在不同阶段处理不同的验证数据；
-	- 方法返回值：法返回值为`(confirm_data, status)`元组，`confirm_data`为处理后认证数据（`byte`类型），`status`为`int`类型，表示认证所处阶段，-2表示结束，-1表示失败，其它返回`auth_stage`值；
+	- 方法返回值：需返回`(confirm_data, status)`元组，`confirm_data`为处理后认证数据（`byte`类型），`status`为`int`类型，表示认证所处阶段，-2表示结束，-1表示失败，其它返回`auth_stage`值；
 
 
 - UnAuth(topic)，用于装饰第三方平台取消认证方法，
 	- 装饰器参数：`topic`：字符串类型，表示话题名；
 	- 方法参数：被装饰方法的参数无限制；
-	- 方法返回值：法返回值`is_success`，为`bool`类型，只有返回`True`，框架才会对WDF做状态复位操作。注意：在向第三方平台取消回调后，一定需返回`True`，否则WDF收不到状态复位通知，导致下次重启注册失败。
+	- 方法返回值：返回值`is_success`，为`bool`类型，只有返回`True`，框架才会对WDF做状态复位操作。注意：在向第三方平台取消回调后，一定需返回`True`，否则WDF收不到状态复位通知，导致下次重启注册失败。
 
 
 注意：通过`topic`名把`Request`，`Response`与`Auth`关联起来，即：一个`topic`最多只能有一个`Response`，`Request`与`Auth`只能两者有其一。`Request`与`Response`可以配合使用，`Response`与`Auth`也可配合使用，但`Request`与`Auth`在同一个`topic`名下不可配合使用，这样也无实际意义。当然，若一个`topic`仅仅有`Response`也是合理的。

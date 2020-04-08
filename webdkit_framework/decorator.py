@@ -34,7 +34,7 @@ def UnAuth(topic):
         def unauth_inner(*args, **kwargs):
             self = args[0]
             is_succ =  func(*args, **kwargs)
-            if is_succ == True:
+            if is_succ != True:
                 return
             rc = self.send_auth(topic=topic, data=None, auth_stage=AUTH_NONE_STATE)
             if rc == 200:
