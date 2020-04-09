@@ -69,7 +69,7 @@ webdkit_framework主要源文件及功能如下：
 - protocol.py，行协议转换；
 - transmit.py，数据发送。
 
-和业务开发直接相关的是`decorator.py`与`framework.py`。使用webdkit_framework简化业务开发工作：首先需继承`decorator.py`源文件中`WdkBase`类；其次还需`decorator.py`文件中提供的装饰器配合。
+和业务开发直接相关的是`decorator.py`与`framework.py`。使用webdkit_framework简化业务开发工作：首先需继承`framework.py`源文件中`WdkBase`类；其次还需`decorator.py`文件中提供的装饰器配合。
 
 
 # 5. webdkit_framework 装饰器
