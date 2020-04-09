@@ -164,9 +164,9 @@ from webdkit_framework.decorator import Request, Response, Auth, UnAuth
 class DingTalk(WdkBase):
     def __init__(self):
         self.token = "123456"
-        self.corp_id = "ding756c3a3731cc4d7cd"
-        self.app_key = "dingevjpdegyhmfvvzmx"
-        self.app_secret = "-sF4tzkZ9dE17owMcYINj34_HJQf4eViUuzT9aZbRfbYjUpIU7ZzPAt9dQjK4OL6"
+        self.corp_id = "dingx756c3x3f231cc4decd"
+        self.app_key = "dingevejpdagyhdfvfvzgmx"
+        self.app_secret = "-sF4tzkZ9ajsdjaMcYINj34_HJQf4dguzT9sdfDKLbYjUpqjzPAt9dQjK4OL6"
         self.access_token = self.get_access_token()
         self.ads_encoding_key = "rvEljT9ZH5IOWM4QosIzyYvcBl9w4TeucaXqMTqWtYR"
         self.crypto = DingTalkCrypto(self.token, self.ads_encoding_key, self.corp_id)

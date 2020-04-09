@@ -219,6 +219,8 @@ class WdkBase(object):
 
         def auth_data_confirm(reg_element, topic, http_data):
             auth_func = self._get_reg_attr(reg_element.auth_name)
+            if reg_element.auth_stage < 0:
+                return
             reg_element.auth_stage += AUTH_STATE_UPDATA_STEP
             confirm_data, status = auth_func(http_data, reg_element.auth_stage)
             self._process_auth(reg_element, topic, confirm_data, status)
