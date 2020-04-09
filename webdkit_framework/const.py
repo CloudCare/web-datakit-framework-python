@@ -6,6 +6,8 @@ AUTH_NONE_STATE = -1
 AUTH_FINISH_STATE = -2
 AUTH_STATE_UPDATA_STEP = 1
 
+EXCEPTION_ABORT = "exception_abort"
+
 SUPERTOPIC = "supertopic"
 TOPIC = "topic"
 AUTH = "auth"

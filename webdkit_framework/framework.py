@@ -77,6 +77,11 @@ class WdkBase(object):
             return getattr(self, name, None)
         return None
 
+    def _process_exception(self, e):
+        if self.cfg[EXCEPTION_ABORT]:
+            logging.critical("app exit with exception {}".format(e))
+            os._exit(1)
+
     def _process_auth(self, reg_element, topic, data, status):
         if status != AUTH_NONE_STATE and data != None:
             self.send_auth(topic, data, reg_element.auth_stage)
@@ -127,10 +132,16 @@ class WdkBase(object):
     def start_request(self):
         def request_get_task(self, topic, interval, request_func):
             while True:
-                data = request_func()
                 logging.debug("topic {} period get".format(topic))
-                if data != None:
-                    self.send_wdf(data, topic)
+                try:
+                    data = request_func()
+                except Exception as e:
+                    logging.error(e)
+                    self._process_exception(e)
+                    continue
+                else:
+                    if data != None:
+                        self.send_wdf(data, topic)
                 time.sleep(interval)
 
         for topic, reg_element in Registry.registries.items():
@@ -153,7 +164,12 @@ class WdkBase(object):
                     elif code == 201:  # wdf上topic已在succ状态
                         return None, -3
                     elif code == 200:  # wdf上topic申请成功
-                        return func(data, auth_stage)
+                        try:
+                            return func(data, auth_stage)
+                        except Exception as e:
+                            logging.error(e)
+                            self._process_exception(e)
+                            return None, -1
 
             tasks = []
             for topic, reg_element in Registry.registries.items():
@@ -183,8 +199,14 @@ class WdkBase(object):
             while True:
                 data = msg_q.get()
                 logging.debug("topic {} recieve data".format(topic))
-                processed_data = response_func(data)
-                self.send_dway(processed_data, topic)
+                try:
+                    processed_data = response_func(data)
+                except Exception as e:
+                    logging.error(e)
+                    self._process_exception(e)
+                    continue
+                else:
+                    self.send_dway(processed_data, topic)
 
         for topic, reg_element in Registry.registries.items():
             response_func = self._get_reg_attr(reg_element.response_name)
@@ -222,8 +244,13 @@ class WdkBase(object):
             if reg_element.auth_stage < 0:
                 return
             reg_element.auth_stage += AUTH_STATE_UPDATA_STEP
-            confirm_data, status = auth_func(http_data, reg_element.auth_stage)
-            self._process_auth(reg_element, topic, confirm_data, status)
+            try:
+                confirm_data, status = auth_func(http_data, reg_element.auth_stage)
+            except Exception as e:
+                logging.error(e)
+                self._process_exception(e)
+            else:
+                self._process_auth(reg_element, topic, confirm_data, status)
 
         def nsq_handle(msg):
             data_type, super_topic, topic, http_data, http_body = parse_json_data(msg.body)
