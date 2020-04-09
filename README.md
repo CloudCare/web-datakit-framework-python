@@ -85,7 +85,7 @@ webdkit_framework主要源文件及功能如下：
 - Response(topic)，用于装饰消费数据方法，
 	- 装饰器参数：`topic`：字符串类型，表示消费数据话题名；
 	- 方法参数：使用此装饰器的方法签名为`xxx(self, data)`,`data`：byte类型，表示待处理的数据
-	- 方法返回值：需返回诸如`[point1, point2, point3,...]`列表，列表每个元素`point`代表一个写入influxdb的数据点，每个数据点将会被转成行协议并发送到dataway，若没有数据点则返回空列表`[]`。每个`point`是诸如`{"measurement":"xxx", "tags":tag, "fields":field, "timestamp":1585293365730598912}`字典类型，其中：`xxx`标集名；`tag`数据点的tag，字典类型，tag可选；`field`数据点的field，字典类型，field必填；`1585293365730598912`纳秒级别整数时间戳，可选，若不填框架自动打上当前时间；框架会检查每个数据点类型是否正确，若类型检查失败，则丢弃数据并产生`ERROR`级别打印信息；
+	- 方法返回值：需返回诸如`[point1, point2, point3,...]`列表，列表每个元素`point`代表一个写入influxdb的数据点，每个数据点将会被转成行协议并发送到dataway，若没有数据点则返回空列表`[]`。每个`point`是诸如`{"measurement":"xxx", "tags":tag, "fields":field, "timestamp":1585293365730598912}`字典类型，其中：`xxx`指标集名；`tag`数据点的tag，字典类型，tag可选；`field`数据点的field，字典类型，field必填；`1585293365730598912`纳秒级别整数时间戳，可选，若不填框架自动打上当前时间；框架会检查每个数据点类型是否正确，若类型检查失败，则丢弃数据并产生`ERROR`级别打印信息；
 
 
 - Auth(topic)，用于装饰第三方平台认证方法，
@@ -109,7 +109,7 @@ webdkit_framework主要源文件及功能如下：
 
 ### Request/Response
 
-以5秒为周期获取驻云gitlab上ftagent项目ft-2.0分支commit信息并进行消费为例：
+以30秒为周期获取驻云gitlab上ftagent项目ft-2.0分支commit信息并进行消费为例：
 
 ```
 import json
@@ -217,7 +217,7 @@ class DingTalk(WdkBase):
         print(decryp)
         event = decryp.get("EventType", "")
         if event != "check_url":
-            return None, False
+            return None, -1
 
         confirm_data = self.crypto.encrypt_message(msg="success")
         print(confirm_data)
@@ -231,7 +231,7 @@ class DingTalk(WdkBase):
             return self.ding_talk_confrim(data)
 
     @Response(topic="bpms_task_change")
-    def ding_talk_process(self, data):
+    def ding_talk_response(self, data):
         print("---------------------------process----------------------------")
         http_content = data.decode().split("\r\n")
         http_first = http_content[0]
@@ -267,7 +267,7 @@ class DingTalk(WdkBase):
         return points
 
     @UnAuth(topic="bpms_task_change")
-    def unauth(self):
+    def ding_talk_unauth(self):
         r = requests.get(url="https://oapi.dingtalk.com/call_back/delete_call_back?access_token={}".format(
             self.access_token))
         print(r.text)
